@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="004-create-employee-positions" author="Kirill">
+        <!-- Join-таблица для связи Many-to-Many: employees ↔ position_cache -->
+        <createTable tableName="employee_positions">
+            <!-- Можно без собственного id, но с ним удобнее дебажить -->
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" />
+            </column>
+
+            <column name="employee_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="position_id" type="BIGINT">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- Внешние ключи -->
+        <addForeignKeyConstraint
+                baseTableName="employee_positions"
+                baseColumnNames="employee_id"
+                constraintName="fk_emp_pos_emp"
+                referencedTableName="employees"
+                referencedColumnNames="id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE" />
+
+        <addForeignKeyConstraint
+                baseTableName="employee_positions"
+                baseColumnNames="position_id"
+                constraintName="fk_emp_pos_pos"
+                referencedTableName="position_cache"
+                referencedColumnNames="id"
+                onDelete="RESTRICT"
+                onUpdate="CASCADE" />
+
+        <!-- Один и тот же сотрудник не может иметь одну и ту же должность дважды -->
+        <addUniqueConstraint
+                tableName="employee_positions"
+                columnNames="employee_id, position_id"
+                constraintName="uk_emp_pos" />
+
+        <!-- Индексы для быстрых JOIN'ов -->
+        <createIndex tableName="employee_positions" indexName="idx_emp_pos_emp">
+            <column name="employee_id" />
+        </createIndex>
+
+        <createIndex tableName="employee_positions" indexName="idx_emp_pos_pos">
+            <column name="position_id" />
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
