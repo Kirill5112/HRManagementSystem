@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="004-create-positions-grades" author="Kirill">
+        <createTable tableName="position_grades">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="position_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="grade_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="salary_multiplier" type="NUMERIC(4, 2)" defaultValue="1.0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="position_grades"
+                baseColumnNames="position_id"
+                constraintName="fk_pos_grade_pos"
+                referencedTableName="positions"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint
+                baseTableName="position_grades"
+                baseColumnNames="grade_id"
+                constraintName="fk_pos_grade_grade"
+                referencedTableName="grades"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <addUniqueConstraint
+                tableName="position_grades"
+                columnNames="position_id, grade_id"
+                constraintName="uk_pos_grade"/>
+
+        <createIndex tableName="position_grades" indexName="idx_pos_grade_pos">
+            <column name="position_id"/>
+        </createIndex>
+
+        <createIndex tableName="position_grades" indexName="idx_pos_grade_grade">
+            <column name="grade_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

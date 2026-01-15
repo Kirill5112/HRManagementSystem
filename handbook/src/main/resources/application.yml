@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: handbook
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/service2_db
+    username: refuser
+    password: refpass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: public
