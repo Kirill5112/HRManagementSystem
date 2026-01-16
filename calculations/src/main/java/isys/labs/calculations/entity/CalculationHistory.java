@@ -41,10 +41,10 @@ public class CalculationHistory {
 
     private Integer stepOrder;
 
-    @Column(name = "input_data", columnDefinition = "JSONB")
+    @Column(name = "input_data", columnDefinition = "text")
     private String inputData;
 
-    @Column(name = "output_data", columnDefinition = "JSONB")
+    @Column(name = "output_data", columnDefinition = "text")
     private String outputData;
 
 

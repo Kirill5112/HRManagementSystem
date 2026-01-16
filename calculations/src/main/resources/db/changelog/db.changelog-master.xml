@@ -9,4 +9,5 @@
     <include file="v1/002-create-cash-balances.xml" relativeToChangelogFile="true"/>
     <include file="v1/003-create-calculation-histories.xml" relativeToChangelogFile="true"/>
     <include file="v1/004-create-salary-reports.xml" relativeToChangelogFile="true"/>
+    <include file="v1/005-alter-input-output-data.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
