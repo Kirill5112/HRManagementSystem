@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Локальный кэш должностей из сервиса 2.
+ */
 @Entity
 @Table(name = "position_cache")
 @Data
