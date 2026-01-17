@@ -11,4 +11,6 @@
     <include file="v1/004-create-employee-positions.xml" relativeToChangelogFile="true"/>
     <include file="v1/005-add-status-to-employees.xml" relativeToChangelogFile="true"/>
     <include file="v1/006-add-dept-id-to-employees.xml" relativeToChangelogFile="true"/>
+    <include file="v1/007-create-employee-position-grade.xml" relativeToChangelogFile="true"/>
+    <include file="v1/008-alter-position-cashe.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -15,6 +15,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * остатки по кассам и валютам
+ */
 @Entity
 @Table(
         name = "cash_balances",

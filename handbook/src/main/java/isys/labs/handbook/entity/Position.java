@@ -14,6 +14,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+/**
+ * должности (справочник)
+ */
 @Entity
 @Table(name = "positions")
 @Data

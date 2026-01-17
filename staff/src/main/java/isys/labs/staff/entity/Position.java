@@ -33,9 +33,6 @@ public class Position {
     @Column
     private String code;
 
-    @Column(name = "grade_id")
-    private Long gradeId;
-
     @ManyToMany(mappedBy = "positions", fetch = FetchType.LAZY)
     private Set<Employee> employees = new HashSet<>();
 

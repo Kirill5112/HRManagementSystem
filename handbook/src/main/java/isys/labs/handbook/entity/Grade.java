@@ -15,6 +15,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Грейды/уровни квалификации
+ */
 @Entity
 @Table(name = "grades")
 @Data
@@ -37,6 +40,7 @@ public class Grade {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal maxSalary;
 
+    //Валюта
     @Column(nullable = false)
     private String currency;
 

@@ -17,6 +17,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+/**
+ * история шагов расчета
+ */
 @Entity
 @Table(
         name = "calculation_history",

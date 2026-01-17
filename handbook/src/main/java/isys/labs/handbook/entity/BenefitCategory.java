@@ -14,6 +14,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * Категории льгот
+ */
 @Entity
 @Table(name = "benefit_categories")
 @Data
@@ -30,6 +33,9 @@ public class BenefitCategory {
     @Column(nullable = false)
     private String description;
 
+    /**
+     * необлагаемая сумма
+     */
     @Column(nullable = false)
     private BigDecimal taxFreeAmount;
 

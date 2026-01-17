@@ -19,6 +19,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * расчеты зарплаты
+ */
 @Entity
 @Table(
         name = "salary_calculations",
@@ -70,6 +73,9 @@ public class SalaryCalculation {
     @Column(name = "social_contributions", precision = 10, scale = 2)
     private BigDecimal socialContributions = BigDecimal.ZERO;
 
+    /**
+     * чистая ЗП
+     */
     @Column(name = "net_salary", precision = 10, scale = 2)
     private BigDecimal netSalary;
 

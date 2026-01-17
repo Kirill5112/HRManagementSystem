@@ -16,6 +16,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * налоговые ставки
+ */
 @Entity
 @Table(
         name = "tax_rates",
@@ -39,9 +42,11 @@ public class TaxRate {
 
     private String description;
 
+    //дата начала действия
     @Column(name = "valid_from", nullable = false)
     private LocalDate validFrom;
 
+    //дата окончания действия
     @Column(name = "valid_to")
     private LocalDate validTo;
 

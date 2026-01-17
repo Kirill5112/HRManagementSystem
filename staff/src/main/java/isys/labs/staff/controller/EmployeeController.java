@@ -1,10 +1,9 @@
 package isys.labs.staff.controller;
 
 import isys.labs.staff.dto.EmployeeDto;
-import isys.labs.staff.dto.SalaryCalculationRequest;
-import isys.labs.staff.event.SalaryCalculationEvent;
+import isys.labs.staff.kafka.SalaryCalculationRequest;
 import isys.labs.staff.service.EmployeeService;
-import isys.labs.staff.service.SalaryCalculationProducer;
+import isys.labs.staff.service.SalaryCalculationOrchestrator;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-    private final SalaryCalculationProducer salaryCalculationProducer;
+    private final SalaryCalculationOrchestrator salaryCalculationOrchestrator;
 
-    public EmployeeController(EmployeeService employeeService, SalaryCalculationProducer salaryCalculationProducer) {
+    public EmployeeController(EmployeeService employeeService, SalaryCalculationOrchestrator salaryCalculationOrchestrator) {
         this.employeeService = employeeService;
-        this.salaryCalculationProducer = salaryCalculationProducer;
+        this.salaryCalculationOrchestrator = salaryCalculationOrchestrator;
     }
 
     @GetMapping
@@ -53,16 +52,7 @@ public class EmployeeController {
             @PathVariable Long id,
             @RequestBody SalaryCalculationRequest request
     ) {
-        SalaryCalculationEvent event = new SalaryCalculationEvent();
-        event.setEmployeeId(id);
-        event.setPeriodStart(request.getPeriodStart());
-        event.setPeriodEnd(request.getPeriodEnd());
-        event.setGrossSalary(request.getGrossSalary());
-        event.setBonuses(request.getBonuses());
-        event.setDeductions(request.getDeductions());
-
-        salaryCalculationProducer.sendSalaryCalculation(event);
-
+        salaryCalculationOrchestrator.startSalaryCalculation(id, request);
         return ResponseEntity.accepted().build();
     }
 
