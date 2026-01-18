@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
@@ -45,6 +47,15 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeDto create(@RequestBody @Valid EmployeeDto dto) {
         return employeeService.create(dto);
+    }
+
+    @PostMapping("/{id}/positions")
+    public ResponseEntity<EmployeeDto> assignPositions(
+            @PathVariable("id") Long employeeId,
+            @RequestBody List<Long> positionIds
+    ) {
+        EmployeeDto updated = employeeService.assignPositions(employeeId, positionIds);
+        return ResponseEntity.ok(updated);
     }
 
     @PostMapping("/{id}/calculate-salary")

@@ -35,6 +35,11 @@ public class PositionGradeController {
         return positionGradeService.getByGrade(gradeId);
     }
 
+    @GetMapping("/by-pos-and-gra/{positionId}/{gradeId}")
+    public PositionGradeDto getByPositionAndGrade(@PathVariable Long positionId, @PathVariable Long gradeId){
+        return positionGradeService.getByBothId(positionId, gradeId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PositionGradeDto assignGrade(@RequestParam Long positionId,

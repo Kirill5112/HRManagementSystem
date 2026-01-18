@@ -1,6 +1,6 @@
 package isys.labs.staff.service;
 
-import isys.labs.staff.client.ReferenceClient;
+import isys.labs.staff.client.HandBookClient;
 import isys.labs.staff.dto.PositionDtoFromHandBook;
 import isys.labs.staff.entity.Position;
 import isys.labs.staff.repository.PositionCacheRepository;
@@ -21,7 +21,7 @@ class PositionCacheServiceTest {
     private PositionCacheRepository positionCacheRepository;
 
     @Mock
-    private ReferenceClient referenceClient;
+    private HandBookClient handBookClient;
 
     @InjectMocks
     private PositionCacheService positionCacheService;
@@ -38,7 +38,7 @@ class PositionCacheServiceTest {
         dto2.setName("QA");
         dto2.setCode("QA");
 
-        when(referenceClient.getAllPositions()).thenReturn(List.of(dto1, dto2));
+        when(handBookClient.getAllPositions()).thenReturn(List.of(dto1, dto2));
 
         positionCacheService.syncAll();
 

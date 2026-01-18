@@ -32,6 +32,16 @@ public class PositionGradeService {
         this.modelMapper = modelMapper;
     }
 
+    public PositionGradeDto getByBothId(Long positionId, Long gradeId){
+        Position position = positionRepository.findById(positionId)
+                .orElseThrow(() -> new IllegalArgumentException("Position not found: " + positionId));
+        Grade grade = gradeRepository.findById(gradeId)
+                .orElseThrow(() -> new IllegalArgumentException("Grade not found: " + gradeId));
+        PositionGrade positionGrade = positionGradeRepository.findByPositionAndGrade(position, grade).
+                orElseThrow(() -> new IllegalArgumentException("PostionGrade not found"));
+        return modelMapper.map(positionGrade, PositionGradeDto.class);
+    }
+
     public List<PositionGradeDto> getByPosition(Long positionId) {
         Position position = positionRepository.findById(positionId)
                 .orElseThrow(() -> new IllegalArgumentException("Position not found: " + positionId));

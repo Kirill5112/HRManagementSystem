@@ -8,23 +8,24 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class ReferenceClient {
+public class HandBookClient {
 
     private final RestTemplate restTemplate;
+    private final String referenceBaseUrl = "http://localhost:8081";
 
-    public ReferenceClient(RestTemplate restTemplate) {
+    public HandBookClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     public List<PositionDtoFromHandBook> getAllPositions() {
         PositionDtoFromHandBook[] response =
-                restTemplate.getForObject("http://localhost:8081/api/positions", PositionDtoFromHandBook[].class);
+                restTemplate.getForObject(referenceBaseUrl + "/api/positions", PositionDtoFromHandBook[].class);
         assert response != null;
         return Arrays.asList(response);
     }
 
     public PositionDtoFromHandBook getPositionById(Long id) {
-        return restTemplate.getForObject("http://localhost:8081/api/positions/{id}",
+        return restTemplate.getForObject(referenceBaseUrl + "/api/positions/{id}",
                 PositionDtoFromHandBook.class, id);
     }
 }

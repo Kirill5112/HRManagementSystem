@@ -51,7 +51,16 @@ public class SalaryCalculation {
     @Column(name = "period_end", nullable = false)
     private LocalDate periodEnd;
 
-    // ===== Входные данные =====
+    @Column(name = "tax_rate", precision = 5, scale = 2)
+    private BigDecimal taxRate;
+
+    @Column(name = "taxes_amount", precision = 10, scale = 2)
+    private BigDecimal taxesAmount;
+
+    @Column(name = "social_contributions", precision = 10, scale = 2)
+    private BigDecimal socialContributions = BigDecimal.ZERO;
+
+    // ===== Результаты расчёта =====
 
     @Column(name = "gross_salary", nullable = false, precision = 10, scale = 2)
     private BigDecimal grossSalary;
@@ -61,17 +70,6 @@ public class SalaryCalculation {
 
     @Column(name = "deductions", precision = 10, scale = 2)
     private BigDecimal deductions = BigDecimal.ZERO;
-
-    // ===== Результаты расчёта =====
-
-    @Column(name = "tax_rate", precision = 5, scale = 2)
-    private BigDecimal taxRate;
-
-    @Column(name = "taxes_amount", precision = 10, scale = 2)
-    private BigDecimal taxesAmount;
-
-    @Column(name = "social_contributions", precision = 10, scale = 2)
-    private BigDecimal socialContributions = BigDecimal.ZERO;
 
     /**
      * чистая ЗП

@@ -1,6 +1,6 @@
 package isys.labs.staff.service;
 
-import isys.labs.staff.client.ReferenceClient;
+import isys.labs.staff.client.HandBookClient;
 import isys.labs.staff.dto.PositionDtoFromHandBook;
 import isys.labs.staff.entity.Position;
 import isys.labs.staff.repository.PositionCacheRepository;
@@ -15,19 +15,19 @@ import java.util.List;
 public class PositionCacheService {
 
     private final PositionCacheRepository positionCacheRepository;
-    private final ReferenceClient referenceClient; // твой клиент к сервису 2
+    private final HandBookClient handBookClient; // твой клиент к сервису 2
 
     public PositionCacheService(PositionCacheRepository positionCacheRepository,
-                                ReferenceClient referenceClient) {
+                                HandBookClient handBookClient) {
         this.positionCacheRepository = positionCacheRepository;
-        this.referenceClient = referenceClient;
+        this.handBookClient = handBookClient;
     }
 
     /**
      * Полная синхронизация всех должностей из сервиса 2.
      */
     public void syncAll() {
-        List<PositionDtoFromHandBook> remotePositions = referenceClient.getAllPositions();
+        List<PositionDtoFromHandBook> remotePositions = handBookClient.getAllPositions();
         for (PositionDtoFromHandBook remote : remotePositions) {
             Position pos = positionCacheRepository.findById(remote.getId())
                     .orElseGet(Position::new);
@@ -42,10 +42,14 @@ public class PositionCacheService {
     }
 
     /**
-     * Синхронизация одной должности по ID (например, при создании/обновлении в сервисе 2).
+     * Синхронизация одной должности по ID
      */
-    public void syncOne(Long positionId) {
-        PositionDtoFromHandBook remote = referenceClient.getPositionById(positionId);
+    public Position syncOne(Long positionId) {
+        PositionDtoFromHandBook remote = handBookClient.getPositionById(positionId);
+
+        if (remote == null) {
+            throw new IllegalArgumentException("Position not found in handbook service: " + positionId);
+        }
 
         Position pos = positionCacheRepository.findById(positionId)
                 .orElseGet(Position::new);
@@ -56,5 +60,6 @@ public class PositionCacheService {
         pos.setSyncedAt(LocalDateTime.now());
 
         positionCacheRepository.save(pos);
+        return pos;
     }
 }

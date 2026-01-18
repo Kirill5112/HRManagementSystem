@@ -1,9 +1,10 @@
-package isys.labs.calculations.dto;
+package isys.labs.calculations.kafka;
 
+import isys.labs.calculations.dto.EmployeePositionGradeDto;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class SalaryCalculationEvent {
@@ -12,8 +13,5 @@ public class SalaryCalculationEvent {
     private LocalDate periodStart;
     private LocalDate periodEnd;
 
-    private BigDecimal grossSalary;
-    private BigDecimal bonuses;
-    private BigDecimal deductions;
+    private List<EmployeePositionGradeDto> positions;
 }
-

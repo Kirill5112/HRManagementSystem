@@ -7,7 +7,6 @@ import isys.labs.staff.entity.EmployeeStatus;
 import isys.labs.staff.entity.Position;
 import isys.labs.staff.repository.DepartmentRepository;
 import isys.labs.staff.repository.EmployeeRepository;
-import isys.labs.staff.repository.PositionCacheRepository;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -24,23 +23,17 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
-    private final PositionCacheRepository positionCacheRepository;
+    private final PositionCacheService positionCacheService;
     private final ModelMapper modelMapper;
 
     public EmployeeService(EmployeeRepository employeeRepository,
-                           DepartmentRepository departmentRepository, PositionCacheRepository positionCacheRepository,
+                           DepartmentRepository departmentRepository, PositionCacheService positionCacheService,
                            ModelMapper modelMapper) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
-        this.positionCacheRepository = positionCacheRepository;
+        this.positionCacheService = positionCacheService;
         this.modelMapper = modelMapper;
     }
-
-/*    public List<EmployeeDto> getAll() {
-        return employeeRepository.findAll().stream()
-                .map(e -> modelMapper.map(e, EmployeeDto.class))
-                .toList();
-    }*/
 
     public EmployeeDto getById(Long id) {
         Employee emp = employeeRepository.findById(id)
@@ -74,9 +67,10 @@ public class EmployeeService {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + employeeId));
 
-        Set<Position> positions = new HashSet<>(positionCacheRepository.findAllById(positionIds));
-        if (positions.size() != positionIds.size()) {
-            throw new IllegalArgumentException("Some positions are missing in cache");
+        Set<Position> positions = new HashSet<>();
+
+        for (Long positionId : positionIds) {
+            positions.add(positionCacheService.syncOne(positionId));
         }
 
         employee.setPositions(positions);

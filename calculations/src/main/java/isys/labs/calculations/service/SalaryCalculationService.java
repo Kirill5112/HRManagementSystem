@@ -2,7 +2,10 @@ package isys.labs.calculations.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import isys.labs.calculations.dto.SalaryCalculationEvent;
+import isys.labs.calculations.client.HandbookClient;
+import isys.labs.calculations.dto.EmployeePositionGradeDto;
+import isys.labs.calculations.dto.GradeInfoDto;
+import isys.labs.calculations.kafka.SalaryCalculationEvent;
 import isys.labs.calculations.entity.CalculationHistory;
 import isys.labs.calculations.entity.SalaryCalculation;
 import isys.labs.calculations.repository.CalculationHistoryRepository;
@@ -12,7 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 @Service
@@ -21,26 +27,46 @@ public class SalaryCalculationService {
 
     private final SalaryCalculationRepository salaryCalculationRepository;
     private final CalculationHistoryRepository calculationHistoryRepository;
+    private final HandbookClient handbookClient;
 
     @Transactional
     public void handleCalculationEvent(SalaryCalculationEvent event) {
-        SalaryCalculation calc = new SalaryCalculation();
-        calc.setEmployeeId(event.getEmployeeId());
-        calc.setPeriodStart(event.getPeriodStart());
-        calc.setPeriodEnd(event.getPeriodEnd());
-        calc.setGrossSalary(event.getGrossSalary());
-        calc.setBonuses(event.getBonuses());
-        calc.setDeductions(event.getDeductions());
 
+        BigDecimal grossSalary = BigDecimal.ZERO;
+        for(EmployeePositionGradeDto positionGrade: event.getPositions()){
+            GradeInfoDto grade = handbookClient.getGrade(positionGrade.getGradeId());
+            BigDecimal salaryMultiplier = handbookClient.getPositionGrade(
+                    positionGrade.getPositionId(),
+                    positionGrade.getGradeId()
+            ).getSalaryMultiplier();
+            BigDecimal baseFromGrade = grade.getMinSalary();
+            BigDecimal monthlyBase = baseFromGrade.multiply(salaryMultiplier);// минимальная * на ставку
+            long daysInPeriod = ChronoUnit.DAYS.between(event.getPeriodStart(), event.getPeriodEnd()) + 1;
+            long daysInMonth = YearMonth.from(event.getPeriodStart()).lengthOfMonth();
+
+            BigDecimal grossPart = monthlyBase
+                    .multiply(BigDecimal.valueOf(daysInPeriod))
+                    .divide(BigDecimal.valueOf(daysInMonth), 2, RoundingMode.HALF_UP);
+            grossSalary = grossSalary.add(grossPart);
+        }
+        BigDecimal bonuses = BigDecimal.ZERO;
+        BigDecimal deductions = BigDecimal.ZERO;
         BigDecimal taxRate = new BigDecimal("0.13");
-        BigDecimal taxableBase = event.getGrossSalary()
-                .add(event.getBonuses())
-                .subtract(event.getDeductions());
+        BigDecimal taxableBase = grossSalary
+                .add(bonuses
+                .subtract(deductions));
 
         BigDecimal taxes = taxableBase.multiply(taxRate);
         BigDecimal social = taxableBase.multiply(new BigDecimal("0.30"));
         BigDecimal net = taxableBase.subtract(taxes).subtract(social);
 
+        SalaryCalculation calc = new SalaryCalculation();
+        calc.setEmployeeId(event.getEmployeeId());
+        calc.setPeriodStart(event.getPeriodStart());
+        calc.setPeriodEnd(event.getPeriodEnd());
+        calc.setGrossSalary(grossSalary);
+        calc.setBonuses(bonuses);
+        calc.setDeductions(deductions);
         calc.setTaxRate(taxRate);
         calc.setTaxesAmount(taxes);
         calc.setSocialContributions(social);
