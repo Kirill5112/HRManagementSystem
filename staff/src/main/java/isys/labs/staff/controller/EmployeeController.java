@@ -1,9 +1,9 @@
 package isys.labs.staff.controller;
 
 import isys.labs.staff.dto.EmployeeDto;
-import isys.labs.staff.kafka.SalaryCalculationRequest;
+import isys.labs.staff.dto.SalaryCalculationRequest;
 import isys.labs.staff.service.EmployeeService;
-import isys.labs.staff.service.SalaryCalculationOrchestrator;
+import isys.labs.staff.service.SalaryCalculationService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,11 +26,11 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-    private final SalaryCalculationOrchestrator salaryCalculationOrchestrator;
+    private final SalaryCalculationService salaryCalculationService;
 
-    public EmployeeController(EmployeeService employeeService, SalaryCalculationOrchestrator salaryCalculationOrchestrator) {
+    public EmployeeController(EmployeeService employeeService, SalaryCalculationService salaryCalculationService) {
         this.employeeService = employeeService;
-        this.salaryCalculationOrchestrator = salaryCalculationOrchestrator;
+        this.salaryCalculationService = salaryCalculationService;
     }
 
     @GetMapping
@@ -63,7 +63,7 @@ public class EmployeeController {
             @PathVariable Long id,
             @RequestBody SalaryCalculationRequest request
     ) {
-        salaryCalculationOrchestrator.startSalaryCalculation(id, request);
+        salaryCalculationService.startSalaryCalculation(id, request);
         return ResponseEntity.accepted().build();
     }
 

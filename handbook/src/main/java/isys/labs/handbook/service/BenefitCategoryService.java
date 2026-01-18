@@ -4,22 +4,18 @@ import isys.labs.handbook.dto.BenefitCategoryDto;
 import isys.labs.handbook.entity.BenefitCategory;
 import isys.labs.handbook.repository.BenefitCategoryRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
-@Transactional
 public class BenefitCategoryService {
 
     private final BenefitCategoryRepository benefitCategoryRepository;
     private final ModelMapper modelMapper;
-
-    public BenefitCategoryService(BenefitCategoryRepository benefitCategoryRepository, ModelMapper modelMapper) {
-        this.benefitCategoryRepository = benefitCategoryRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<BenefitCategoryDto> getAll() {
         return benefitCategoryRepository.findAll().stream()
@@ -39,6 +35,7 @@ public class BenefitCategoryService {
         return modelMapper.map(saved, BenefitCategoryDto.class);
     }
 
+    @Transactional
     public BenefitCategoryDto update(Long id, BenefitCategoryDto updated) {
         BenefitCategory existing = benefitCategoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Benefit category not found: "));

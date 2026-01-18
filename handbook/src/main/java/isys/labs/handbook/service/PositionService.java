@@ -4,23 +4,18 @@ import isys.labs.handbook.dto.PositionDto;
 import isys.labs.handbook.entity.Position;
 import isys.labs.handbook.repository.PositionRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class PositionService {
 
     private final PositionRepository positionRepository;
     private final ModelMapper modelMapper;
-
-    public PositionService(PositionRepository positionRepository,
-                           ModelMapper modelMapper) {
-        this.positionRepository = positionRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<PositionDto> getAll() {
         return positionRepository.findAll().stream()
@@ -40,6 +35,7 @@ public class PositionService {
         return modelMapper.map(saved, PositionDto.class);
     }
 
+    @Transactional
     public PositionDto update(Long id, PositionDto dto) {
         Position existing = positionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Position not found: " + id));

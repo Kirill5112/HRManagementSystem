@@ -4,6 +4,7 @@ import isys.labs.handbook.dto.TaxRateDto;
 import isys.labs.handbook.entity.TaxRate;
 import isys.labs.handbook.repository.TaxRateRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +15,11 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class TaxRateService {
 
     private final TaxRateRepository taxRateRepository;
     private final ModelMapper modelMapper;
-
-    public TaxRateService(TaxRateRepository taxRateRepository, ModelMapper modelMapper) {
-        this.taxRateRepository = taxRateRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<TaxRateDto> getAll() {
         return taxRateRepository.findAll().stream()

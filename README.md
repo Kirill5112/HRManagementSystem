@@ -1,0 +1,17 @@
+Система управления персоналом и зарплатой на микросервисной архитектуре с использованием Spring Boot, Kafka и PostgreSQL.
+
+Staff Service - управление сотрудниками, их должностями и грейдами
+
+Handbook Service - Справочник должностей, грейдов, налоговых ставок, льготных категорий
+
+Salary Service - Расчет зарплаты с историей
+
+**Запуск инфраструктуры**
+
+docker-compose up -d
+
+**Запуск сервисов**
+После запуска 3 х сервисов swagger ui:
+
+HR Staff: http://localhost:8080/swagger-ui.html
+HR HandBook: http://localhost:8081/swagger-ui.html

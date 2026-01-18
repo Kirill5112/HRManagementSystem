@@ -1,9 +1,9 @@
 package isys.labs.staff.service;
 
 import isys.labs.staff.client.HandBookClient;
-import isys.labs.staff.dto.PositionDtoFromHandBook;
+import isys.labs.staff.dto.PositionFromHandBookDto;
 import isys.labs.staff.entity.Position;
-import isys.labs.staff.repository.PositionCacheRepository;
+import isys.labs.staff.repository.PositionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,34 +15,34 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PositionCacheServiceTest {
+class PositionServiceTest {
 
     @Mock
-    private PositionCacheRepository positionCacheRepository;
+    private PositionRepository positionRepository;
 
     @Mock
     private HandBookClient handBookClient;
 
     @InjectMocks
-    private PositionCacheService positionCacheService;
+    private PositionService positionService;
 
     @Test
     void syncAll_shouldSaveAllPositionsFromReferenceService() {
-        PositionDtoFromHandBook dto1 = new PositionDtoFromHandBook();
+        PositionFromHandBookDto dto1 = new PositionFromHandBookDto();
         dto1.setId(1L);
         dto1.setName("Dev");
         dto1.setCode("DEV");
 
-        PositionDtoFromHandBook dto2 = new PositionDtoFromHandBook();
+        PositionFromHandBookDto dto2 = new PositionFromHandBookDto();
         dto2.setId(2L);
         dto2.setName("QA");
         dto2.setCode("QA");
 
         when(handBookClient.getAllPositions()).thenReturn(List.of(dto1, dto2));
 
-        positionCacheService.syncAll();
+        positionService.syncAll();
 
-        verify(positionCacheRepository, times(2)).save(any(Position.class));
+        verify(positionRepository, times(2)).save(any(Position.class));
     }
 }
 

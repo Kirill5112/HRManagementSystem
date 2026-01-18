@@ -1,5 +1,6 @@
 package isys.labs.calculations.kafka;
 
+import isys.labs.calculations.dto.SalaryCalculationEvent;
 import isys.labs.calculations.service.SalaryCalculationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;

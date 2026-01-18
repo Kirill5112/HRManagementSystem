@@ -4,23 +4,18 @@ import isys.labs.staff.dto.DepartmentDto;
 import isys.labs.staff.entity.Department;
 import isys.labs.staff.repository.DepartmentRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@Transactional
+@RequiredArgsConstructor
 public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
     private final ModelMapper modelMapper;
-
-    public DepartmentService(DepartmentRepository departmentRepository,
-                             ModelMapper modelMapper) {
-        this.departmentRepository = departmentRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<DepartmentDto> getAll() {
         return departmentRepository.findAll().stream()
@@ -34,6 +29,7 @@ public class DepartmentService {
         return modelMapper.map(dep, DepartmentDto.class);
     }
 
+    @Transactional
     public DepartmentDto create(DepartmentDto dto) {
         if (departmentRepository.existsByCode(dto.getCode())) {
             throw new IllegalArgumentException("Department code already exists: " + dto.getCode());
@@ -43,6 +39,7 @@ public class DepartmentService {
         return modelMapper.map(saved, DepartmentDto.class);
     }
 
+    @Transactional
     public DepartmentDto update(Long id, DepartmentDto dto) {
         Department existing = departmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found: " + id));

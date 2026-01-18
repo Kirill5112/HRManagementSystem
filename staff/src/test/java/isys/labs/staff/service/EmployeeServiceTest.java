@@ -1,7 +1,7 @@
 package isys.labs.staff.service;
 
 import isys.labs.staff.client.HandBookClient;
-import isys.labs.staff.dto.BenefitCategoryDtoFromHandbook;
+import isys.labs.staff.dto.BenefitCategoryFromHandbookDto;
 import isys.labs.staff.dto.EmployeeDto;
 import isys.labs.staff.entity.Department;
 import isys.labs.staff.entity.Employee;
@@ -45,7 +45,7 @@ class EmployeeServiceTest {
         dto.setDepartmentId(1L);
         dto.setStatus("ACTIVE");
 
-        BenefitCategoryDtoFromHandbook benefit = new BenefitCategoryDtoFromHandbook();
+        BenefitCategoryFromHandbookDto benefit = new BenefitCategoryFromHandbookDto();
         when(handBookClient.getBenefitCategory(1L)).thenReturn(benefit);
 
         Department dept = new Department();

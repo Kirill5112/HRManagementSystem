@@ -4,22 +4,18 @@ import isys.labs.handbook.dto.GradeDto;
 import isys.labs.handbook.entity.Grade;
 import isys.labs.handbook.repository.GradeRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
-@Transactional
 public class GradeService {
 
     private final GradeRepository gradeRepository;
     private final ModelMapper modelMapper;
-
-    public GradeService(GradeRepository gradeRepository, ModelMapper modelMapper) {
-        this.gradeRepository = gradeRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<GradeDto> getAll() {
         return gradeRepository.findAll().stream()
@@ -39,6 +35,7 @@ public class GradeService {
         return modelMapper.map(saved, GradeDto.class);
     }
 
+    @Transactional
     public GradeDto update(Long id, GradeDto updated) {
         Grade existing = gradeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("GradeDto not found: " + id));

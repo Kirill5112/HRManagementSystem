@@ -1,6 +1,6 @@
 package isys.labs.calculations.config;
 
-import isys.labs.calculations.kafka.SalaryCalculationEvent;
+import isys.labs.calculations.dto.SalaryCalculationEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;

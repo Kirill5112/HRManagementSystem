@@ -1,13 +1,11 @@
 package isys.labs.calculations.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import isys.labs.calculations.client.HandbookClient;
 import isys.labs.calculations.dto.BenefitCategoryInfoDto;
 import isys.labs.calculations.dto.EmployeePositionGradeDto;
 import isys.labs.calculations.dto.GradeInfoDto;
 import isys.labs.calculations.dto.TaxRateInfoDto;
-import isys.labs.calculations.kafka.SalaryCalculationEvent;
+import isys.labs.calculations.dto.SalaryCalculationEvent;
 import isys.labs.calculations.entity.CalculationHistory;
 import isys.labs.calculations.entity.SalaryCalculation;
 import isys.labs.calculations.repository.CalculationHistoryRepository;
@@ -22,6 +20,8 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
+
+import static isys.labs.calculations.util.JsonHelper.toJson;
 
 @Service
 @RequiredArgsConstructor
@@ -109,14 +109,6 @@ public class SalaryCalculationService {
         step.setCreatedAt(LocalDateTime.now());
 
         calculationHistoryRepository.save(step);
-    }
-
-    private String toJson(Object o) {
-        try {
-            return new ObjectMapper().writeValueAsString(o);
-        } catch (JsonProcessingException e) {
-            return "{}";
-        }
     }
 }
 

@@ -1,7 +1,8 @@
 package isys.labs.staff.client;
 
-import isys.labs.staff.dto.BenefitCategoryDtoFromHandbook;
-import isys.labs.staff.dto.PositionDtoFromHandBook;
+import isys.labs.staff.dto.BenefitCategoryFromHandbookDto;
+import isys.labs.staff.dto.PositionFromHandBookDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -12,28 +13,31 @@ import java.util.List;
 public class HandBookClient {
 
     private final RestTemplate restTemplate;
-    private final String referenceBaseUrl = "http://localhost:8081";
+
+    @Value("${server.application.handbookUrl}")
+    private String referenceBaseUrl;
 
     public HandBookClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public List<PositionDtoFromHandBook> getAllPositions() {
-        PositionDtoFromHandBook[] response =
-                restTemplate.getForObject(referenceBaseUrl + "/api/positions", PositionDtoFromHandBook[].class);
-        assert response != null;
+    public List<PositionFromHandBookDto> getAllPositions() {
+        PositionFromHandBookDto[] response =
+                restTemplate.getForObject(referenceBaseUrl + "/api/positions", PositionFromHandBookDto[].class);
+        if(response == null)
+            throw new IllegalStateException("responce null");
         return Arrays.asList(response);
     }
 
-    public PositionDtoFromHandBook getPositionById(Long id) {
+    public PositionFromHandBookDto getPositionById(Long id) {
         return restTemplate.getForObject(referenceBaseUrl + "/api/positions/{id}",
-                PositionDtoFromHandBook.class, id);
+                PositionFromHandBookDto.class, id);
     }
 
-    public BenefitCategoryDtoFromHandbook getBenefitCategory(Long benefitCategoryId){
+    public BenefitCategoryFromHandbookDto getBenefitCategory(Long benefitCategoryId){
         return restTemplate.getForObject(
                 referenceBaseUrl + "/api/benefit-categories/{id}",
-                BenefitCategoryDtoFromHandbook.class,
+                BenefitCategoryFromHandbookDto.class,
                 benefitCategoryId
         );
     }

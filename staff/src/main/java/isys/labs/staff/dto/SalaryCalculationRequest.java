@@ -1,4 +1,4 @@
-package isys.labs.staff.kafka;
+package isys.labs.staff.dto;
 
 import lombok.Data;
 

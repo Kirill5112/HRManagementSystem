@@ -8,6 +8,7 @@ import isys.labs.handbook.repository.GradeRepository;
 import isys.labs.handbook.repository.PositionGradeRepository;
 import isys.labs.handbook.repository.PositionRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,21 +17,13 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class PositionGradeService {
 
     private final PositionGradeRepository positionGradeRepository;
     private final PositionRepository positionRepository;
     private final GradeRepository gradeRepository;
     private final ModelMapper modelMapper;
-
-    public PositionGradeService(PositionGradeRepository positionGradeRepository,
-                                PositionRepository positionRepository,
-                                GradeRepository gradeRepository, ModelMapper modelMapper) {
-        this.positionGradeRepository = positionGradeRepository;
-        this.positionRepository = positionRepository;
-        this.gradeRepository = gradeRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public PositionGradeDto getByBothId(Long positionId, Long gradeId){
         Position position = positionRepository.findById(positionId)

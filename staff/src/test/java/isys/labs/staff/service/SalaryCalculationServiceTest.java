@@ -3,9 +3,9 @@ package isys.labs.staff.service;
 import isys.labs.staff.dto.EmployeePositionGradeDto;
 import isys.labs.staff.entity.Employee;
 import isys.labs.staff.entity.EmployeePositionGrade;
-import isys.labs.staff.kafka.SalaryCalculationEvent;
+import isys.labs.staff.dto.SalaryCalculationEvent;
 import isys.labs.staff.kafka.SalaryCalculationProducer;
-import isys.labs.staff.kafka.SalaryCalculationRequest;
+import isys.labs.staff.dto.SalaryCalculationRequest;
 import isys.labs.staff.repository.EmployeePositionGradeRepository;
 import isys.labs.staff.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class SalaryCalculationServiceTest {
     private SalaryCalculationProducer salaryCalculationProducer;
 
     @InjectMocks
-    private SalaryCalculationOrchestrator service;  // предполагаем, что метод в сервисе
+    private SalaryCalculationService service;  // предполагаем, что метод в сервисе
 
     private EmployeePositionGrade epg1;
     private EmployeePositionGrade epg2;

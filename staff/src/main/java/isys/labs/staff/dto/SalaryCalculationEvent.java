@@ -1,6 +1,5 @@
-package isys.labs.calculations.kafka;
+package isys.labs.staff.dto;
 
-import isys.labs.calculations.dto.EmployeePositionGradeDto;
 import lombok.Data;
 
 import java.time.LocalDate;

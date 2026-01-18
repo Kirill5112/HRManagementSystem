@@ -4,6 +4,7 @@ import isys.labs.calculations.dto.BenefitCategoryInfoDto;
 import isys.labs.calculations.dto.GradeInfoDto;
 import isys.labs.calculations.dto.PositionGradeInfoDto;
 import isys.labs.calculations.dto.TaxRateInfoDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,7 +15,8 @@ public class HandbookClient {
 
     private final RestTemplate restTemplate;
 
-    private final String referenceBaseUrl = "http://localhost:8081";
+    @Value("${server.application.handbookUrl}")
+    private String referenceBaseUrl;
 
     public HandbookClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
