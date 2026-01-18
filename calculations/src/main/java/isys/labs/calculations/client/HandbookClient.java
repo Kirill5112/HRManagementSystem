@@ -1,9 +1,13 @@
 package isys.labs.calculations.client;
 
+import isys.labs.calculations.dto.BenefitCategoryInfoDto;
 import isys.labs.calculations.dto.GradeInfoDto;
 import isys.labs.calculations.dto.PositionGradeInfoDto;
+import isys.labs.calculations.dto.TaxRateInfoDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDate;
 
 @Component
 public class HandbookClient {
@@ -30,6 +34,23 @@ public class HandbookClient {
                 PositionGradeInfoDto.class,
                 positionId,
                 gradeId
+        );
+    }
+
+    public TaxRateInfoDto getTaxRate(LocalDate date){
+        return restTemplate.getForObject(
+                referenceBaseUrl + "/api/tax-rates/effective?date={date}",
+                TaxRateInfoDto.class,
+                date
+
+        );
+    }
+
+    public BenefitCategoryInfoDto getBenefitCategory(Long benefitCategoryId){
+        return restTemplate.getForObject(
+                referenceBaseUrl + "/api/benefit-categories/{id}",
+                BenefitCategoryInfoDto.class,
+                benefitCategoryId
         );
     }
 

@@ -1,5 +1,6 @@
 package isys.labs.staff.client;
 
+import isys.labs.staff.dto.BenefitCategoryDtoFromHandbook;
 import isys.labs.staff.dto.PositionDtoFromHandBook;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -27,5 +28,13 @@ public class HandBookClient {
     public PositionDtoFromHandBook getPositionById(Long id) {
         return restTemplate.getForObject(referenceBaseUrl + "/api/positions/{id}",
                 PositionDtoFromHandBook.class, id);
+    }
+
+    public BenefitCategoryDtoFromHandbook getBenefitCategory(Long benefitCategoryId){
+        return restTemplate.getForObject(
+                referenceBaseUrl + "/api/benefit-categories/{id}",
+                BenefitCategoryDtoFromHandbook.class,
+                benefitCategoryId
+        );
     }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public class SalaryCalculationEvent {
 
     private Long employeeId;
+    private Long benefitCategoryId;
     private LocalDate periodStart;
     private LocalDate periodEnd;
 

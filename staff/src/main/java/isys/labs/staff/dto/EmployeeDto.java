@@ -35,4 +35,6 @@ public class EmployeeDto {
 
     @PastOrPresent
     private LocalDate hireDate;
+
+    private Long benefitCategoryId;
 }

@@ -1,5 +1,7 @@
 package isys.labs.staff.service;
 
+import isys.labs.staff.client.HandBookClient;
+import isys.labs.staff.dto.BenefitCategoryDtoFromHandbook;
 import isys.labs.staff.dto.EmployeeDto;
 import isys.labs.staff.entity.Department;
 import isys.labs.staff.entity.Employee;
@@ -25,14 +27,16 @@ public class EmployeeService {
     private final DepartmentRepository departmentRepository;
     private final PositionCacheService positionCacheService;
     private final ModelMapper modelMapper;
+    private final HandBookClient handBookClient;
 
     public EmployeeService(EmployeeRepository employeeRepository,
                            DepartmentRepository departmentRepository, PositionCacheService positionCacheService,
-                           ModelMapper modelMapper) {
+                           ModelMapper modelMapper, HandBookClient handBookClient) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.positionCacheService = positionCacheService;
         this.modelMapper = modelMapper;
+        this.handBookClient = handBookClient;
     }
 
     public EmployeeDto getById(Long id) {
@@ -42,6 +46,11 @@ public class EmployeeService {
     }
 
     public EmployeeDto create(EmployeeDto dto) {
+        Long benefitCategoryId = dto.getBenefitCategoryId();
+        BenefitCategoryDtoFromHandbook remote = handBookClient.getBenefitCategory(benefitCategoryId);
+        if (remote == null) {
+            throw new IllegalArgumentException("BenefitCategory not found in handbook service: " + benefitCategoryId);
+        }
         Employee emp = mapDtoToEntity(dto);
         Employee saved = employeeRepository.save(emp);
         return modelMapper.map(saved, EmployeeDto.class);
@@ -51,6 +60,7 @@ public class EmployeeService {
         Employee existing = employeeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + id));
 
+
         Employee updatedData = mapDtoToEntity(dto);
         existing.setFirstName(updatedData.getFirstName());
         existing.setLastName(updatedData.getLastName());
@@ -58,6 +68,7 @@ public class EmployeeService {
         existing.setDepartment(updatedData.getDepartment());
         existing.setStatus(updatedData.getStatus());
         existing.setHireDate(updatedData.getHireDate());
+        existing.setBenefitCategoryId(updatedData.getBenefitCategoryId());
 
         Employee saved = employeeRepository.save(existing);
         return modelMapper.map(saved, EmployeeDto.class);

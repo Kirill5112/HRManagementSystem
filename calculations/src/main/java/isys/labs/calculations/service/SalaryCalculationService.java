@@ -3,8 +3,10 @@ package isys.labs.calculations.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import isys.labs.calculations.client.HandbookClient;
+import isys.labs.calculations.dto.BenefitCategoryInfoDto;
 import isys.labs.calculations.dto.EmployeePositionGradeDto;
 import isys.labs.calculations.dto.GradeInfoDto;
+import isys.labs.calculations.dto.TaxRateInfoDto;
 import isys.labs.calculations.kafka.SalaryCalculationEvent;
 import isys.labs.calculations.entity.CalculationHistory;
 import isys.labs.calculations.entity.SalaryCalculation;
@@ -33,7 +35,7 @@ public class SalaryCalculationService {
     public void handleCalculationEvent(SalaryCalculationEvent event) {
 
         BigDecimal grossSalary = BigDecimal.ZERO;
-        for(EmployeePositionGradeDto positionGrade: event.getPositions()){
+        for (EmployeePositionGradeDto positionGrade : event.getPositions()) {
             GradeInfoDto grade = handbookClient.getGrade(positionGrade.getGradeId());
             BigDecimal salaryMultiplier = handbookClient.getPositionGrade(
                     positionGrade.getPositionId(),
@@ -51,10 +53,26 @@ public class SalaryCalculationService {
         }
         BigDecimal bonuses = BigDecimal.ZERO;
         BigDecimal deductions = BigDecimal.ZERO;
-        BigDecimal taxRate = new BigDecimal("0.13");
-        BigDecimal taxableBase = grossSalary
+        TaxRateInfoDto taxRateInfo = handbookClient.getTaxRate(event.getPeriodEnd());
+        if (taxRateInfo.getRate() == null)
+            throw new IllegalStateException("не найдено налоговой ставки");
+        BigDecimal taxRate = taxRateInfo.getRate();
+        BigDecimal base = grossSalary
                 .add(bonuses
-                .subtract(deductions));
+                        .subtract(deductions));
+
+        Long benefitCategoryId = event.getBenefitCategoryId();
+        BigDecimal taxFree = BigDecimal.ZERO;
+        if (benefitCategoryId != null) {
+            BenefitCategoryInfoDto benefitCategoryInfoDto = handbookClient.getBenefitCategory(benefitCategoryId);
+            taxFree = benefitCategoryInfoDto != null ? benefitCategoryInfoDto.getTaxFreeAmount() : BigDecimal.ZERO;
+        }
+
+        BigDecimal taxableBase = base.subtract(taxFree);
+        if (taxableBase.compareTo(BigDecimal.ZERO) < 0) {
+            taxableBase = BigDecimal.ZERO;
+        }
+
 
         BigDecimal taxes = taxableBase.multiply(taxRate);
         BigDecimal social = taxableBase.multiply(new BigDecimal("0.30"));
@@ -83,7 +101,7 @@ public class SalaryCalculationService {
         step.setStepOrder(1);
         step.setInputData(toJson(event));
         step.setOutputData(toJson(Map.of(
-                "taxRate", taxRate,
+                "rate", taxRate,
                 "taxes", taxes,
                 "socialContributions", social,
                 "netSalary", net

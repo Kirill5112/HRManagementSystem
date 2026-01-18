@@ -70,6 +70,9 @@ public class Employee {
     )
     private Set<Position> positions = new HashSet<>();
 
+    @Column(name = "benefit_category_id")
+    private Long benefitCategoryId; // ID BenefitCategory из Service 2
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

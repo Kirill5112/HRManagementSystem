@@ -67,9 +67,11 @@ public class TaxRateService {
         }
         // если valid_to = null — бессрочные
         List<TaxRate> openEnded = taxRateRepository.findByValidToIsNull();
-        effective = openEnded.stream()
-                .filter(r -> !r.getValidFrom().isAfter(date))
-                .max(Comparator.comparing(TaxRate::getValidFrom));
+        if (!openEnded.isEmpty()) {
+            effective = openEnded.stream()
+                    .filter(r -> !r.getValidFrom().isAfter(date))
+                    .max(Comparator.comparing(TaxRate::getValidFrom));
+        }
         return effective.map(rate -> modelMapper.map(rate, TaxRateDto.class));
     }
 }
