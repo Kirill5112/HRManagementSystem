@@ -33,10 +33,10 @@ public class SalaryCalculationOrchestrator {
                     return dto;
                 })
                 .toList();
-
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + employeeId));
-
+        if(positions.isEmpty())
+            throw new IllegalStateException("No positions found for employee: " + employeeId);
         SalaryCalculationEvent event = new SalaryCalculationEvent();
         event.setEmployeeId(employeeId);
         event.setBenefitCategoryId(employee.getBenefitCategoryId());
