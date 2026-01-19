@@ -1,11 +1,22 @@
 spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: salary-calculation-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: isys.labs.calculations.dto.SalaryCalculationEvent
+        spring.json.trusted.packages: isys.labs.calculations.dto
   application:
     name: calculations
 
   datasource:
-    url: jdbc:postgresql://localhost:5435/service3_db
-    username: payrolluser
-    password: payrollpass
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5435/service3_db}
+    username: ${SPRING_DATASOURCE_USERNAME:payrolluser}
+    password: ${SPRING_DATASOURCE_PASSWORD:payrollpass}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -20,14 +31,6 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
     default-schema: public
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: salary-calculation-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
 
 server:
   port: 8082

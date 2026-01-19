@@ -14,8 +14,7 @@ public class SalaryCalculationKafkaListener {
 
     @KafkaListener(
             topics = "salary-calculation-topic",
-            groupId = "salary-calculation-group",
-            containerFactory = "kafkaListenerContainerFactory"
+            groupId = "salary-calculation-group"
     )
     public void listen(SalaryCalculationEvent event) {
         salaryCalculationService.handleCalculationEvent(event);

@@ -3,9 +3,9 @@ spring:
     name: staff
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/service1_db
-    username: hruser
-    password: hrpass
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/service1_db}
+    username: ${SPRING_DATASOURCE_USERNAME:hruser}
+    password: ${SPRING_DATASOURCE_PASSWORD:hrpass}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -21,7 +21,7 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.xml
     default-schema: public
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -29,4 +29,4 @@ spring:
 server:
   port: 8080
   application:
-    handbookUrl: http://localhost:8081
+    handbookUrl: ${HANDBOOK_BASE_URL:http://localhost:8081}

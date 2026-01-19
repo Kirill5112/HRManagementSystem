@@ -3,9 +3,9 @@ spring:
     name: handbook
 
   datasource:
-    url: jdbc:postgresql://localhost:5434/service2_db
-    username: refuser
-    password: refpass
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5434/service2_db}
+    username: ${SPRING_DATASOURCE_USERNAME:refuser}
+    password: ${SPRING_DATASOURCE_PASSWORD:refpass}
     driver-class-name: org.postgresql.Driver
 
   jpa:
