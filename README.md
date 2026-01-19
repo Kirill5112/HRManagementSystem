@@ -14,4 +14,3 @@ docker-compose up -d
 После запуска 3 х сервисов swagger ui:
 
 HR Staff: http://localhost:8080/swagger-ui.html
-HR HandBook: http://localhost:8081/swagger-ui.html
